@@ -195,44 +195,30 @@ function saveScore() {
   //populate scoreboard[] with previous scores
   getStoredScores();
 
-  //if no scores in scorebard, save the new score without sorting
+  //if no scores in scoreboard, save the new score without sorting
   if (scoreboard.score.length === 0) {
     scoreboard.name.push(playerName.value);
     scoreboard.score.push(score);
   } else {
-    console.log("got to else");
-    // var scoreboardLength = scoreboard.score.length;
     for (let index = 0; index < scoreboard.score.length; index++) {
-      console.log(
-        `index= ${index} and scoreboard length = ${scoreboard.score.length}`
-      );
-      console.log("got to iteration " + index);
-      console.log(
-        `score = ${score} and comparison score = ${scoreboard.score[index]}`
-      );
       //insert new score ahead of lower scores
       if (score > scoreboard.score[index]) {
-        console.log(
-          `score=${score} and scoreboard.score[index] = ${scoreboard.score[index]} at position ${index}`
-        );
         scoreboard.score.splice(index, 0, score);
         scoreboard.name.splice(index, 0, playerName.value);
-        break;
+        break; //stop iteration if score is added
+
+        //keep moving down the scoreboard if score is less than score[index] and still lower
+        //than the following score.
       } else if (
-        score <= scoreboard.score[index] &&
+        score < scoreboard.score[index] &&
         score <= scoreboard.score[index + 1]
       ) {
-        console.log(
-          `skipped an iteration between ${scoreboard.score[index]} and ${
-            scoreboard.score[index + 1]
-          }`
-        );
-        //keep moving down the scoreboard if score is smaller than score[index] and the following score.
         continue;
+
+        //
       } else {
-        //add score to end if not larger than any existing score
-        scoreboard.score.push(score);
-        scoreboard.name.push(playerName.value);
+        scoreboard.score.splice(index + 1, 0, score);
+        scoreboard.name.splice(index + 1, 0, playerName.value);
         break;
       }
     }
