@@ -1,51 +1,27 @@
 var content = document.querySelector(".content");
-var beginButton = document.querySelector("#begin-button");
+var beginButton = document.querySelector(".begin-button");
+var beginButtonText = document.querySelector("#begin-button-text");
 var buttons = document.querySelector(".buttons");
 var answerButtons = document.querySelectorAll(".answer-button");
-var answerOne = document.querySelector("#answer-one");
-var answerTwo = document.querySelector("#answer-two");
-var answerThree = document.querySelector("#answer-three");
-var answerFour = document.querySelector("#answer-four");
+var answerButtonText = document.querySelectorAll("#answer-button-text");
+var endButton = document.querySelector(".end-button");
+var rightWrongEl = document.querySelector(".right-wrong");
+var rightWrongPtag = document.createElement("p");
+var timerEl = document.querySelector("#timer");
+var countdownSeconds = 40;
 
-var answerText = document.querySelectorAll(".answer-button-text");
+var stopTimer = false;
 
-var rightAnswer = null; // will be set one of the answer buttons for each question
-var wrongAnswerOne = null;
-var wrongAnswerTwo = null;
-var wrongAnswerThree = null;
+var currentQuestion = 0;
 
-currentQuestion = 0;
+var score = null;
 
-var questions = {
-  questionOne: [
-    "Question 1",
-    "Right Answer",
-    "Answer 2",
-    "Answer 3",
-    "Answer 4",
-  ],
-  questionTwo: [
-    "Question 2",
-    "Answer 1",
-    "Right Answer",
-    "Answer 3",
-    "Answer 4",
-  ],
-  questionThree: [
-    "Question 3",
-    "Answer 1",
-    "Answer 2",
-    "Right Answer",
-    "Answer 4",
-  ],
-  questionFour: [
-    "Question 4",
-    "Answer 1",
-    "Answer 2",
-    "Answer 3",
-    "Right Answer",
-  ],
-};
+var questions = [
+  ["Question 1", "Right Answer", "Answer 2", "Answer 3", "Answer 4"],
+  ["Question 2", "Answer 1", "Right Answer", "Answer 3", "Answer 4"],
+  ["Question 3", "Answer 1", "Answer 2", "Right Answer", "Answer 4"],
+  ["Question 4", "Answer 1", "Answer 2", "Answer 3", "Right Answer"],
+];
 
 // Called when Begin button is clicked
 function startQuiz() {
@@ -57,93 +33,152 @@ function startQuiz() {
     answerButtons[index].setAttribute("style", "display: block;");
   }
 
-  /* should make the next two actions into a function called nextQuestion */
-
-  //add question text
-  //   content.textContent = questions.questionOne[0];
-
-  //add answer button text
-  for (let index = 0; index < answerText.length; index++) {
-    answerText[index].textContent = questions.questionOne[index + 1];
-  }
-}
-
-//assign rightAnswer and wrongAnswer variables to the correct button
-if (content.textContent == questions.questionOne[0]) {
-  rightAnswer = answerOne;
-  console.log("question one", rightAnswer); //delete
-  wrongAnswerOne = answerTwo;
-  wrongAnswerTwo = answerThree;
-  wrongAnswerThree = answerFour;
-
-  //
-} else if ((content.textContent == questions.questionTwo[0])) {
-  rightAnswer = answerTwo;
-  console.log("question two", rightAnswer); //delete
-  wrongAnswerOne = answerOne;
-  wrongAnswerTwo = answerThree;
-  wrongAnswerThree = answerFour;
-} else if ((content.textContent == questions.questionThree[0])) {
-  rightAnswer = answerThree;
-  console.log("question three", rightAnswer); //delete
-  wrongAnswerOne = answerOne;
-  wrongAnswerTwo = answerTwo;
-  wrongAnswerThree = answerFour;
-} else {
-  rightAnswer = answerFour;
-  console.log("question four", rightAnswer); //delete
-  wrongAnswerOne = answerOne;
-  wrongAnswerTwo = answerTwo;
-  wrongAnswerThree = answerThree;
-}
-
-rightAnswer.addEventListener("click", function () {
-  console.log("That's the right answer!"); //delete
-  //call nextQuestion
+  // populate first question
   nextQuestion();
+
+  startTimer();
+}
+
+//add event listeners to .buttons div
+buttons.addEventListener("click", function (event) {
+  if (event.target.textContent == "Begin") {
+    //
+    console.log("Let's begin!");
+  } else if (event.target.textContent == "Play again?") {
+    //reload game if player hits "Play again?"
+    location.reload();
+  } else if (
+    content.textContent == questions[0][0] && // check if player is on question 1
+    event.target.textContent == questions[0][1] // check to see if right answer was clicked
+  ) {
+    console.log(event.target, "Right Answer!");
+    correct();
+    nextQuestion();
+  } else if (
+    content.textContent == questions[1][0] && // check if player is on question 2
+    event.target.textContent == questions[1][2]
+  ) {
+    console.log(event.target, "Right Answer!");
+    correct();
+    nextQuestion();
+  } else if (
+    content.textContent == questions[2][0] && // check if player is on question 3
+    event.target.textContent == questions[2][3]
+  ) {
+    console.log(event.target, "Right Answer!");
+    correct();
+    nextQuestion();
+  } else if (
+    content.textContent == questions[3][0] && // check if player is on final question
+    event.target.textContent == questions[3][4] // and answers correctly
+  ) {
+    console.log(event.target, "Right Answer!");
+    correct();
+    console.log("Thanks for playing!");
+    gameOver();
+  } else if (content.textContent == questions[3][0]) {
+    //check if play answers final quesiton wrong
+    console.log(event.target, "Thanks for playing!");
+    wrong();
+    gameOver();
+  } else {
+    console.log(event.target, "Wrong Answer!");
+    wrong();
+    nextQuestion();
+  }
 });
-
-wrongAnswerOne.addEventListener("click", function () {
-  console.log("That's the wrong answer!"); //delete
-  //call minusTen
-});
-
-wrongAnswerTwo.addEventListener("click", function () {
-  console.log("That's the wrong answer!"); //delete
-});
-
-wrongAnswerThree.addEventListener("click", function () {
-  console.log("That's the wrong answer!"); //delete
-});
-
-// Call checkAnswer when any of the answer buttons are clicked
-// answerOne.addEventListener("click", checkAnswer);
-
-// answerTwo.addEventListener("click", checkAnswer);
-// answerThree.addEventListener("click", checkAnswer);
-// answerFour.addEventListener("click", checkAnswer);
 
 // Call startQuiz when Begin button is clicked
 beginButton.addEventListener("click", startQuiz);
 
 
-/// let's try this for a minute
 function nextQuestion() {
-  var questionArray = [
-    questions.questionOne[0],
-    questions.questionTwo[0],
-    questions.questionThree[0],
-    questions.questionFour[0],
-  ];
-
-  content.textContent = questionArray[currentQuestion];
-
-  currentQuestion++;
-  // content.textContent = questions.questionTwo[0];
+  //add question text
+  content.textContent = questions[currentQuestion][0];
 
   //add answer button text
-  for (let index = 0; index < answerText.length; index++) {
-    answerText[index].textContent = questions.questionTwo[index + 1];
+  for (let index = 0; index < answerButtonText.length; index++) {
+    answerButtonText[index].textContent = questions[currentQuestion][index + 1];
   }
+  currentQuestion++;
 }
 
+function gameOver() {
+    //stop timer
+    stopTimer = true;
+
+    //set score to be the remaining time
+    score = countdownSeconds;
+
+    //clear last question from .content
+    content.textContent = ""
+    
+    //update .content to show user their score
+     function showScore() {
+        content.textContent = "You earned a score of " + score;
+    }
+    //wait until timer stops before displaying score
+    setTimeout(showScore, 1000);
+
+
+  
+
+  //show End button
+  endButton.setAttribute("style", "display: block;");
+
+  //hide answer buttons
+  for (let index = 0; index < answerButtons.length; index++) {
+    answerButtons[index].setAttribute("style", "display: none;");
+  }
+
+  
+}
+
+function correct() {
+
+  rightWrongPtag.textContent = "Correct!";
+  rightWrongEl.appendChild(rightWrongPtag);
+  rightWrongEl.setAttribute("style", "display: block; ")
+  setTimeout(hideRightWrongEl, 1000); // hide message after 1 second
+}
+
+function wrong() {
+
+    // Subtract 10 seconds if there is more than 10 seconds left
+    if (countdownSeconds >10) {
+    countdownSeconds -= 10;
+} else {
+    stopTimer = true;
+    countdownSeconds = 0;
+}
+  rightWrongPtag.textContent = "Wrong.";
+  rightWrongEl.appendChild(rightWrongPtag);
+  rightWrongEl.setAttribute("style", "display: block;")
+  setTimeout(hideRightWrongEl, 1000); // hide message after 1 second
+
+}
+
+// called during correct() and wrong() to re-hide the right and wrong messages.
+function hideRightWrongEl() {
+    rightWrongEl.setAttribute("style", "display; none;");
+}
+
+
+function startTimer() {
+    var timer = setInterval(function() {
+      countdownSeconds --;
+      timerEl.textContent = "Time Left: " +countdownSeconds;
+  
+      if(countdownSeconds === 0 || stopTimer === true) {
+        // Stop timer
+        clearInterval(timer);
+        // Prevent timer from going below zero since setInterval causes a delay
+        if (countdownSeconds <0){
+            countdownSeconds = 0;
+            timerEl.textContent = "Time Left: 0"
+        }
+        gameOver();
+      }
+  
+    }, 1000);
+}

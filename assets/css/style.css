@@ -1,3 +1,17 @@
 .answer-button {
     display: none;
 }
+
+.buttons {
+    display: inline-block;
+}
+
+.end-button {
+    display: none;
+}
+
+.right-wrong {
+    border-top: solid;
+    display: none;
+    font-style: italic;
+}
