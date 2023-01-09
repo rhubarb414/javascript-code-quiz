@@ -23,3 +23,7 @@
 .scoreboard-buttons {    
     display: none;
 }
+
+.game-buttons {
+    display: inline-block;
+}
