@@ -15,3 +15,11 @@
     display: none;
     font-style: italic;
 }
+
+.scoreboard  {
+    display: none;
+}
+
+.scoreboard-buttons {    
+    display: none;
+}

@@ -1,3 +1,5 @@
+var topBarEl = document.querySelector(".top-bar");
+
 var content = document.querySelector(".content");
 var beginButton = document.querySelector(".begin-button");
 var beginButtonText = document.querySelector("#begin-button-text");
@@ -12,6 +14,9 @@ var countdownSeconds = 60;
 var playerName = document.getElementById("name");
 var saveScoreRow = document.querySelector(".save-score-row");
 var saveScoreBtn = document.getElementById("save-score-btn");
+
+var scoreboardOl = document.querySelector(".scoreboard");
+var scoreboardBtns = document.querySelector(".scoreboard-buttons");
 
 var scoreboard = {
   name: [],
@@ -185,10 +190,16 @@ function gameOver() {
 }
 
 function saveScore() {
+  //populate scoreboard[] with previous scores
   getStoredScores();
+
+  //add new player name and score to scoreboard[]
   scoreboard.name.push(playerName.value);
   scoreboard.score.push(score);
+
+  //store up-to-date scoreboard
   localStorage.setItem("scoreboard", JSON.stringify(scoreboard));
+
   addToScoreboard();
   showScoreboard();
 }
@@ -199,9 +210,30 @@ saveScoreBtn.addEventListener("click", function (event) {
   saveScore();
 });
 
-function addToScoreboard() {}
-function showScoreboard() {}
+function addToScoreboard() {
+  console.log("addToScoreboard called"); //delete
+  for (let index = 0; index < scoreboard.name.length; index++) {
+    var name = scoreboard.name[index];
+    var score = scoreboard.score[index];
+
+    var li = document.createElement("li");
+    li.textContent = name + " – " + score;
+    li.setAttribute("class", "scoreboard-row");
+
+    scoreboardOl.appendChild(li);
+    console.log("li = ", li, "scoreboard = ", scoreboardOl); //delete
+  }
+}
+function showScoreboard() {
+  saveScoreRow.setAttribute("style", "display: none;");
+  scoreboardOl.setAttribute("style", "display: block;");
+  scoreboardBtns.setAttribute("style", "display: inline-block;");
+
+  content.innerHTML = "<h1>Scoreboard</h1>";
+}
 function clearScoreboard() {}
+
+//retrieve previous scoreboard entries from local storage
 function getStoredScores() {
   var storedScores = JSON.parse(localStorage.getItem("scoreboard"));
 
@@ -211,3 +243,18 @@ function getStoredScores() {
 }
 
 function newGame() {}
+
+topBarEl.addEventListener("click", function (event) {
+  var element = event.target;
+
+  if (element.matches("a") === true) {
+    //hide Begin button if it hasn't been clicked
+    beginButton.setAttribute("style", "display: none;");
+    //stopTimer if
+    stopTimer = true;
+
+    getStoredScores();
+    addToScoreboard();
+    showScoreboard();
+  }
+});

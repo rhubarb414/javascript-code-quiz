@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <ul>
+      <ul class="top-bar">
         <li><a href="#">Scoreboard</a></li>
 
         <li id="timer">Time Left: 60</li>
@@ -54,13 +54,11 @@
               <button id="save-score-btn">Submit Score</button>
             </li>
           </ul>
-          <ul class="score-board">
-            <li class="scoreboard-row"></li>
-            <li class="scoreboard-buttons">
-              <button id="play-again-button"></button>
-              <button id="clear-scores-button"></button>
-            </li>
-          </ul>
+          <ol class="scoreboard"></ol>
+          <div class="scoreboard-buttons">
+            <button id="play-again-button">Start New Game</button>
+            <button id="clear-scores-button">Clear Scoreboard</button>
+          </div>
         </div>
         <div class="right-wrong"></div>
       </section>
