@@ -11,7 +11,7 @@
     <header>
       <ul>
         <li><a href="#">Scoreboard</a></li>
-       
+
         <li id="timer">Time Left: 60</li>
       </ul>
     </header>
@@ -28,19 +28,42 @@
       </section>
 
       <section>
-        <div class="buttons">
+        <div class="game-buttons">
           <ul>
-            <li class="begin-button"><button id="begin-button-text">Begin</button></li>
-            <li class="answer-button"><button id="answer-button-text"></button></li>
-            <li class="answer-button"><button id="answer-button-text"></button></li>
-            <li class="answer-button"><button id="answer-button-text"></button></li>
-            <li class="answer-button"><button id="answer-button-text"></button></li>
-            <li class="end-button"><button id="end-button-text">Play again?</button></li>
+            <li class="begin-button">
+              <button id="begin-button-text">Begin</button>
+            </li>
+            <li class="answer-button">
+              <button id="answer-button-text"></button>
+            </li>
+            <li class="answer-button">
+              <button id="answer-button-text"></button>
+            </li>
+            <li class="answer-button">
+              <button id="answer-button-text"></button>
+            </li>
+            <li class="answer-button">
+              <button id="answer-button-text"></button>
+            </li>
+            <li class="end-button">
+              <button id="end-button-text">Play again?</button>
+            </li>
           </ul>
         </div>
-        <div class="right-wrong">
-
+        <div class="post-game-buttons">
+          <ul>
+            <li class="score-submit-row">
+              <textarea id="name"></textarea>
+              <button id="save-score">Submit Score</button>
+            </li>
+            <li class="scoreboard-row"></li>
+            <li class="scoreboard-buttons">
+              <button id="play-again-button"></button>
+              <button id="clear-scores-button"></button>
+            </li>
+          </ul>
         </div>
+        <div class="right-wrong"></div>
       </section>
     </main>
 
