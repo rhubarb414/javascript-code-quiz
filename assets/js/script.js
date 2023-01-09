@@ -4,14 +4,19 @@ var beginButtonText = document.querySelector("#begin-button-text");
 var gameButtons = document.querySelector(".game-buttons");
 var answerButtons = document.querySelectorAll(".answer-button");
 var answerButtonText = document.querySelectorAll("#answer-button-text");
-var endButton = document.querySelector(".end-button");
 var rightWrongEl = document.querySelector(".right-wrong");
 var rightWrongPtag = document.createElement("p");
 var timerEl = document.querySelector("#timer");
 var countdownSeconds = 60;
 
 var playerName = document.getElementById("name");
-var saveScoreBtn = document.getElementById("save-score");
+var saveScoreRow = document.querySelector(".save-score-row");
+var saveScoreBtn = document.getElementById("save-score-btn");
+
+var scoreboard = {
+  name: [],
+  score: [],
+};
 
 var stopTimer = false;
 
@@ -49,9 +54,6 @@ function startQuiz() {
 gameButtons.addEventListener("click", function (event) {
   if (event.target.textContent == "Begin") {
     return; //keep wrong() from firing at start of the game
-  } else if (event.target.textContent == "Play again?") {
-    //reload game if player hits "Play again?"
-    location.reload();
   } else if (
     content.textContent == questions[0][0] && // check if player is on question 1
     event.target.textContent == questions[0][1] // check to see if right answer was clicked
@@ -107,32 +109,6 @@ function nextQuestion() {
   currentQuestion++;
 }
 
-function gameOver() {
-  //stop timer
-  stopTimer = true;
-
-  //set score to be the remaining time
-  score = countdownSeconds;
-
-  //clear last question from .content
-  content.textContent = "";
-
-  //update .content to show user their score
-  function showScore() {
-    content.textContent = "You earned a score of " + score;
-  }
-  //wait until timer stops before displaying score
-  setTimeout(showScore, 1000);
-
-  //show End button
-  endButton.setAttribute("style", "display: block;");
-
-  //hide answer buttons
-  for (let index = 0; index < answerButtons.length; index++) {
-    answerButtons[index].setAttribute("style", "display: none;");
-  }
-}
-
 //show message after correct answer
 function correct() {
   rightWrongPtag.textContent = "Correct!";
@@ -182,12 +158,39 @@ function startTimer() {
 
 // *** Begin post-quiz section – scoreboard and reset mechanics ***
 
+function gameOver() {
+  //stop timer
+  stopTimer = true;
+
+  //set score to be the remaining time
+  score = countdownSeconds;
+
+  //clear last question from .content
+  content.textContent = "";
+
+  //update .content to show user their score
+  function showScore() {
+    content.innerHTML = `<h1>Finished!</h1> </p>You earned a score of ${score}.`;
+  }
+  //wait until timer stops before displaying score
+  setTimeout(showScore, 1000);
+
+  //show save score form
+  saveScoreRow.setAttribute("style", "display: block;");
+
+  //hide answer buttons
+  for (let index = 0; index < answerButtons.length; index++) {
+    answerButtons[index].setAttribute("style", "display: none;");
+  }
+}
+
 function saveScore() {
-  var playerScore = {
-    name: playerName.value,
-    score: score,
-  };
-  localStorage.setItem("playerScore", JSON.stringify(playerScore));
+  getStoredScores();
+  scoreboard.name.push(playerName.value);
+  scoreboard.score.push(score);
+  localStorage.setItem("scoreboard", JSON.stringify(scoreboard));
+  addToScoreboard();
+  showScoreboard();
 }
 
 //call saveScore when player clicks save-score button
@@ -198,3 +201,13 @@ saveScoreBtn.addEventListener("click", function (event) {
 
 function addToScoreboard() {}
 function showScoreboard() {}
+function clearScoreboard() {}
+function getStoredScores() {
+  var storedScores = JSON.parse(localStorage.getItem("scoreboard"));
+
+  if (storedScores !== null) {
+    scoreboard = storedScores;
+  }
+}
+
+function newGame() {}
